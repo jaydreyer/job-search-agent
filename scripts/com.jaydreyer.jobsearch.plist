@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Daily job-search run via launchd. Runs every day at 07:30 local time.
+
+  Install:
+    # edit the two ABSOLUTE paths below first, then:
+    cp scripts/com.jaydreyer.jobsearch.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.jaydreyer.jobsearch.plist
+
+  Check / remove:
+    launchctl list | grep jobsearch
+    launchctl unload ~/Library/LaunchAgents/com.jaydreyer.jobsearch.plist
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.jaydreyer.jobsearch</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/jaydreyer/job_search_agent/scripts/run_daily.sh</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>7</integer>
+        <key>Minute</key>
+        <integer>30</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/jaydreyer/job_search_agent/data/digests/launchd.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/jaydreyer/job_search_agent/data/digests/launchd.err.log</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>

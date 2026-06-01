@@ -1,0 +1,43 @@
+# What the agent searches for. Edit freely — no code changes needed.
+
+country: us              # Adzuna country code (us, gb, ca, ...)
+results_per_query: 50    # max Adzuna results per query (cap 50)
+min_score_for_digest: 70 # only postings >= this score appear in the digest
+scoring_model: claude-sonnet-4-6  # local-pipeline (`jobsearch run`) per-posting scoring
+agent_model: claude-sonnet-4-6    # managed agent's model (Jay's choice — cost-conscious)
+
+# Aggregator searches (Adzuna). Add one block per role/location you care about.
+# Targeting remote AND/OR the Twin Cities (Minneapolis–St. Paul metro).
+queries:
+  # --- Remote ---
+  - keywords: "solutions engineer AI"
+    remote_only: true
+  - keywords: "forward deployed engineer"
+    remote_only: true
+  - keywords: "AI solutions architect"
+    remote_only: true
+  - keywords: "developer experience"
+    remote_only: true
+  - keywords: "AI product manager"
+    remote_only: true
+  # --- Twin Cities ---
+  - keywords: "solutions engineer"
+    location: "Minneapolis, MN"
+  - keywords: "AI engineer"
+    location: "Minneapolis, MN"
+  - keywords: "developer advocate"
+    location: "Saint Paul, MN"
+
+# Company ATS boards — the cleanest, most reliable source.
+# Find the slug in the careers-page URL, e.g.:
+#   boards.greenhouse.io/SLUG   |   jobs.lever.co/SLUG   |   jobs.ashbyhq.com/SLUG
+ats_boards:
+  - provider: greenhouse
+    slug: stripe
+    label: Stripe
+  - provider: ashby
+    slug: openai
+    label: OpenAI
+  - provider: lever
+    slug: matchgroup
+    label: Match Group

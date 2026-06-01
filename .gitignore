@@ -1,0 +1,12 @@
+.env
+data/seen.db
+data/digests/
+data/resume.md
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+data/feedback.json

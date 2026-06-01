@@ -1,0 +1,41 @@
+[project]
+name = "job-search-agent"
+version = "0.1.0"
+description = "Pull relevant job postings from multiple sources and score them against your resume."
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=0.92",
+    "httpx>=0.27",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0",
+    "rich>=13.7",
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.scripts]
+jobsearch = "job_search_agent.cli:main"
+jobsearch-agent-setup = "job_search_agent.agent.setup:main"
+jobsearch-agent-run = "job_search_agent.agent.run_session:main"
+jobsearch-agent-dryrun = "job_search_agent.agent.dryrun:main"
+jobsearch-validate-boards = "job_search_agent.agent.discover:main"
+jobsearch-dashboard = "job_search_agent.web.dashboard:main"
+jobsearch-serve = "job_search_agent.web.serve:main"
+jobsearch-feedback = "job_search_agent.feedback_cli:main"
+jobsearch-status = "job_search_agent.status:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
