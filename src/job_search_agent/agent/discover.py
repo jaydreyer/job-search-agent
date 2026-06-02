@@ -38,35 +38,70 @@ OVERRIDES = {
 # Forward Deployed Engineers, DevRel, and AI product roles. Many will not resolve
 # (wrong ATS / private board) — the probe keeps only the live ones.
 COMPANIES = [
-    # AI labs / products
-    "OpenAI", "Anthropic", "Cohere", "Mistral", "Hugging Face", "Perplexity", "Scale AI",
-    "Runway", "ElevenLabs", "Character AI", "Together AI", "Fireworks AI", "Anyscale",
-    "Replicate", "Stability AI", "Adept", "Contextual AI", "Glean", "Sierra", "Cresta",
-    "Harvey", "Cohere", "Writer", "Jasper", "Synthesia", "AssemblyAI", "Deepgram",
-    "LanceDB", "Baseten", "Modal", "Lambda", "CoreWeave", "Hebbia", "Abridge", "Cognition",
-    # Dev tools / infra
-    "Vercel", "Netlify", "GitLab", "HashiCorp", "Docker", "Replit", "Postman", "Sentry",
-    "CircleCI", "Render", "Railway", "Supabase", "PlanetScale", "Neon", "Pulumi", "Grafana",
-    "Sourcegraph", "Linear", "Retool", "Temporal", "LaunchDarkly", "Cortex", "Mux",
-    "Vapi", "Knock", "WorkOS", "Clerk", "Stytch", "Speakeasy", "Resend", "Liveblocks",
-    # Data / ML infra
-    "Databricks", "Snowflake", "Confluent", "Fivetran", "Airbyte", "Pinecone", "Weaviate",
-    "Qdrant", "MongoDB", "Elastic", "Redis", "ClickHouse", "Datadog", "Cribl", "Monte Carlo",
-    "dbt Labs", "Hex", "Census", "Hightouch", "Tecton", "Weights & Biases", "Comet",
-    "Arize", "Galileo", "Nomic", "LlamaIndex", "Unstructured", "Chroma",
-    # Fintech / enterprise SaaS (heavy SE / solutions)
-    "Stripe", "Plaid", "Brex", "Ramp", "Twilio", "Notion", "Airtable", "Asana", "Figma",
-    "Miro", "Amplitude", "Mixpanel", "Zapier", "Workato", "Gusto", "Rippling", "Deel",
-    "Checkr", "Samsara", "Mercury", "Modern Treasury", "Unit", "Pipe", "Navan", "Vanta",
-    "Drata", "Census", "Census",
-    # Security / cloud / identity
-    "Cloudflare", "Fastly", "Okta", "1Password", "Snyk", "Wiz", "Lacework", "Tailscale",
+    # AI Labs & Foundation Models
+    "Anthropic", "OpenAI", "Cohere", "Mistral", "Hugging Face", "Perplexity",
+    "Together AI", "Fireworks AI", "Anyscale", "Replicate", "Baseten",
+    "Scale AI", "Lambda", "CoreWeave", "Modal",
+
+    # AI Applications & Assistants
+    "Glean", "Sierra", "Cresta", "Harvey", "Writer", "Contextual AI",
+    "Hebbia", "Abridge", "Cognition",
+
+    # Conversation, Knowledge & Support AI
+    "Aisera", "Moveworks", "Forethought", "Espressive", "Guru", "Intercom",
+
+    # Sales & Revenue Intelligence
+    "Gong", "Outreach", "Salesloft", "Highspot", "Seismic",
+
+    # Voice, Video & Creative AI
+    "ElevenLabs", "Runway", "Synthesia", "AssemblyAI", "Deepgram", "Vapi",
+
+    # Talent & HR AI
+    "Eightfold AI", "Paradox",
+
+    # API, Developer Tools & Portals
+    "Kong", "ReadMe", "Stoplight", "Speakeasy", "Postman",
+    "Vercel", "Netlify", "GitLab", "Docker", "Replit",
+    "Sentry", "CircleCI", "Render", "Railway", "Sourcegraph",
+    "Linear", "Retool", "Temporal", "LaunchDarkly", "Cortex", "Mux",
+    "Knock", "WorkOS", "Clerk", "Stytch", "Resend", "Liveblocks",
+    "HashiCorp", "Pulumi", "Neon", "Supabase",
+
+    # Data, Analytics & BI
+    "Databricks", "Snowflake", "Hex", "ThoughtSpot", "Domo",
+    "Amplitude", "Mixpanel", "Monte Carlo", "dbt Labs",
+    "Confluent", "Fivetran", "Airbyte", "ClickHouse", "Cribl",
+    "Census", "Hightouch",
+
+    # Vector Databases & ML Infra
+    "Pinecone", "Weaviate", "Qdrant", "Chroma", "LanceDB",
+    "MongoDB", "Elastic", "Redis",
+    "Weights & Biases", "Comet", "Arize", "Galileo",
+    "Nomic", "LlamaIndex", "Unstructured",
+    "Tecton", "Dataiku", "DataRobot", "H2O.ai", "Domino Data Lab",
+
+    # AI Governance & Observability
+    "Robust Intelligence", "Credo AI", "Fiddler AI",
+
+    # Workflow & Integration Automation
+    "Zapier", "Workato", "Tray.io", "Make",
+
+    # Enterprise SaaS (SE-heavy orgs)
+    "Notion", "Airtable", "Asana", "Figma", "Miro",
+    "Rippling", "Deel", "Gusto", "Navan", "Vanta", "Drata",
+    "Samsara", "Checkr", "Twilio",
+
+    # Fintech & Payments Infrastructure
+    "Stripe", "Plaid", "Brex", "Ramp",
+    "Mercury", "Modern Treasury", "Unit", "Pipe",
+
+    # Security & Identity
+    "Cloudflare", "Fastly", "Okta", "1Password",
+    "Snyk", "Wiz", "Lacework", "Tailscale",
     "Doppler", "Teleport", "Chainguard", "Aembit",
-    # AI-forward enterprise / platforms
-    "Palantir", "Instabase", "Moveworks", "Dataiku", "DataRobot", "H2O.ai", "Domino Data Lab",
-    "Tecton", "Robust Intelligence", "Credo AI", "Fiddler AI",
-    # Match Group is known-good (keep it for continuity)
-    "Match Group",
+
+    # Enterprise AI Platforms & Infrastructure
+    "Palantir", "Instabase", "Datadog",
 ]
 
 
