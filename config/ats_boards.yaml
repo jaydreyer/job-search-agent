@@ -39,8 +39,14 @@ ats_boards:
   slug: palantir
   label: Palantir
 - provider: greenhouse
+  slug: tripactions
+  label: Navan
+- provider: greenhouse
   slug: workato
   label: Workato
+- provider: greenhouse
+  slug: gleanwork
+  label: Glean
 - provider: greenhouse
   slug: scaleai
   label: Scale AI
@@ -56,6 +62,9 @@ ats_boards:
 - provider: greenhouse
   slug: gitlab
   label: GitLab
+- provider: greenhouse
+  slug: wizinc
+  label: Wiz
 - provider: greenhouse
   slug: elastic
   label: Elastic
@@ -98,6 +107,9 @@ ats_boards:
 - provider: greenhouse
   slug: postman
   label: Postman
+- provider: greenhouse
+  slug: gongio
+  label: Gong
 - provider: ashby
   slug: plaid
   label: Plaid
@@ -176,6 +188,9 @@ ats_boards:
 - provider: ashby
   slug: drata
   label: Drata
+- provider: greenhouse
+  slug: temporaltechnologies
+  label: Temporal
 - provider: ashby
   slug: confluent
   label: Confluent
@@ -191,9 +206,15 @@ ats_boards:
 - provider: greenhouse
   slug: mixpanel
   label: Mixpanel
+- provider: greenhouse
+  slug: arizeai
+  label: Arize
 - provider: ashby
   slug: docker
   label: Docker
+- provider: greenhouse
+  slug: dbtlabsinc
+  label: dbt Labs
 - provider: ashby
   slug: lambda
   label: Lambda
@@ -257,6 +278,12 @@ ats_boards:
 - provider: ashby
   slug: airbyte
   label: Airbyte
+- provider: greenhouse
+  slug: sourcegraph91
+  label: Sourcegraph
+- provider: greenhouse
+  slug: pulumicorporation
+  label: Pulumi
 - provider: ashby
   slug: resend
   label: Resend
@@ -320,3 +347,6 @@ ats_boards:
 - provider: ashby
   slug: mux
   label: Mux
+- provider: ashby
+  slug: trychroma
+  label: Chroma

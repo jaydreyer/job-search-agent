@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -27,11 +28,20 @@ from ..sources.ats.lever import fetch_lever
 OUT_FILE = ROOT / "config" / "ats_boards.yaml"
 PROVIDERS = {"greenhouse": fetch_greenhouse, "lever": fetch_lever, "ashby": fetch_ashby}
 
-# Slugs that aren't just the normalized company name.
+# Non-obvious slugs confirmed live via the public ATS JSON API. (Companies whose
+# board *page* exists but whose JSON API is disabled — Retool, Snyk, HashiCorp,
+# W&B, Census, Guru, Teleport — can't be reached this way at any slug.)
 OVERRIDES = {
-    "Weights & Biases": "wandb",
-    "dbt Labs": "dbtlabs",
-    "Hugging Face": "huggingface",
+    "dbt Labs": "dbtlabsinc",             # greenhouse
+    "Sourcegraph": "sourcegraph91",       # greenhouse
+    "Pulumi": "pulumicorporation",        # greenhouse
+    "Glean": "gleanwork",                 # greenhouse
+    "Gong": "gongio",                     # greenhouse
+    "Navan": "tripactions",               # greenhouse
+    "Wiz": "wizinc",                      # greenhouse
+    "Arize": "arizeai",                   # greenhouse
+    "Chroma": "trychroma",                # ashby
+    "Temporal": "temporaltechnologies",   # greenhouse
 }
 
 # Broad seed list, weighted toward companies that hire Solutions Engineers,
@@ -109,16 +119,24 @@ def _slug(name: str) -> str:
     return OVERRIDES.get(name, re.sub(r"[^a-z0-9]", "", name.lower()))
 
 
-def _probe(name: str) -> dict | None:
+def _probe(name: str, attempts: int = 2) -> dict | None:
     slug = _slug(name)
     with httpx.Client(timeout=12, follow_redirects=True) as client:
         for provider, fetch in PROVIDERS.items():
-            try:
-                postings = fetch(client, AtsBoard(provider=provider, slug=slug, label=name))
-            except Exception:  # noqa: BLE001 - 404 / wrong provider
-                continue
-            if postings:
-                return {"provider": provider, "slug": slug, "label": name, "count": len(postings)}
+            for attempt in range(attempts):  # retry: bulk probing can hit rate limits
+                try:
+                    postings = fetch(client, AtsBoard(provider=provider, slug=slug, label=name))
+                except httpx.HTTPStatusError as e:
+                    if e.response.status_code == 404:
+                        break  # genuinely wrong provider — don't retry
+                    time.sleep(0.6)
+                    continue
+                except Exception:  # noqa: BLE001 - transient network
+                    time.sleep(0.6)
+                    continue
+                if postings:
+                    return {"provider": provider, "slug": slug, "label": name, "count": len(postings)}
+                break  # resolved but empty — move to next provider
     return None
 
 
@@ -134,11 +152,23 @@ def main() -> None:
 
     print(f"Probing {len(names)} companies across greenhouse/lever/ashby…")
     found: list[dict] = []
-    with ThreadPoolExecutor(max_workers=16) as pool:
+    found_labels: set[str] = set()
+    with ThreadPoolExecutor(max_workers=8) as pool:  # modest concurrency to avoid rate limits
         for result in pool.map(_probe, names):
             if result:
                 found.append(result)
+                found_labels.add(result["label"])
                 print(f"  ✓ {result['label']:24} {result['provider']}:{result['slug']} ({result['count']} jobs)")
+
+    # Sequential sweep of misses — recovers rate-limit false-negatives from the parallel pass.
+    missed = [n for n in names if n not in found_labels]
+    if missed:
+        print(f"\nRe-checking {len(missed)} misses sequentially…")
+        for name in missed:
+            result = _probe(name, attempts=3)
+            if result:
+                found.append(result)
+                print(f"  ✓ (recovered) {result['label']:20} {result['provider']}:{result['slug']} ({result['count']} jobs)")
 
     found.sort(key=lambda r: r["count"], reverse=True)
     boards = [{"provider": r["provider"], "slug": r["slug"], "label": r["label"]} for r in found]
