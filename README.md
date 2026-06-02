@@ -5,6 +5,8 @@ loop server-side; the agent pulls postings from Adzuna and 100+ company ATS boar
 host-side custom tools), scores each against your resume, and writes a ranked digest that
 feeds a local web dashboard.
 
+![Job Search Dashboard](docs/dashboard.png)
+
 ## Quick start
 
 ```bash
@@ -110,6 +112,30 @@ Each morning the digest + dashboard refresh on their own — just reload your bo
 `data/digests/index.html`.
 
 ---
+
+## Cloud run (optional — laptop-independent)
+
+The local `launchd` schedule only fires when your Mac is awake. To run in the cloud
+instead, `.github/workflows/daily.yml` runs the agent on GitHub Actions. It stays
+inert until you add repo secrets (scheduled runs no-op cleanly until then):
+
+```bash
+gh secret set ANTHROPIC_API_KEY   # paste your key
+gh secret set ADZUNA_APP_ID
+gh secret set ADZUNA_APP_KEY
+gh secret set AGENT_ID
+gh secret set ENVIRONMENT_ID
+gh secret set RESUME_MD < data/resume.md   # resume isn't in the repo; pass it as a secret
+```
+
+Then enable the schedule (it's already in the workflow) or trigger a manual run from the
+Actions tab. The run uploads the digest as a workflow **artifact**.
+
+> ⚠️ **Privacy:** on a **public** repo, artifacts are downloadable by anyone — so your
+> daily matches would be visible. For private results either (a) make the repo private
+> (`gh repo edit --visibility private`), or (b) swap the upload step for an email step.
+> Feedback (applied/dismissed/preferences) still lives on your local machine, so cloud
+> runs won't know about it unless you also sync `data/feedback.json`.
 
 ## How it works
 

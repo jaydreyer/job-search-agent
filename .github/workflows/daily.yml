@@ -1,0 +1,67 @@
+name: Daily job search
+
+# Laptop-independent daily run. Needs repo Secrets (see README → "Cloud run").
+# Until secrets are set, scheduled runs no-op cleanly (no failure emails).
+
+on:
+  schedule:
+    # ~07:30 America/Chicago. GitHub cron is UTC and does NOT observe DST, so this
+    # fires 07:30 CDT (summer) / 06:30 CST (winter). Adjust if you care.
+    - cron: "30 12 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check secrets are configured
+        id: guard
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "No ANTHROPIC_API_KEY secret — skipping (see README → Cloud run)."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: astral-sh/setup-uv@v5
+        if: steps.guard.outputs.skip != 'true'
+
+      - name: Install
+        if: steps.guard.outputs.skip != 'true'
+        run: uv sync --frozen
+
+      - name: Provide resume (from secret — repo doesn't store it)
+        if: steps.guard.outputs.skip != 'true'
+        env:
+          RESUME_MD: ${{ secrets.RESUME_MD }}
+        run: |
+          if [ -z "$RESUME_MD" ]; then echo "::error::RESUME_MD secret not set"; exit 1; fi
+          printf '%s' "$RESUME_MD" > data/resume.md
+
+      - name: Run the agent
+        if: steps.guard.outputs.skip != 'true'
+        env:
+          # .env is absent here, so Secrets falls back to these env vars.
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+          AGENT_ID: ${{ secrets.AGENT_ID }}
+          ENVIRONMENT_ID: ${{ secrets.ENVIRONMENT_ID }}
+        run: uv run jobsearch-agent-run
+
+      # Default delivery: artifact. NOTE on a PUBLIC repo, artifacts are
+      # downloadable by anyone. For private delivery, make the repo private,
+      # or swap this for an email step (see README → Cloud run).
+      - name: Upload digest
+        if: steps.guard.outputs.skip != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: digest-${{ github.run_id }}
+          path: |
+            data/digests/*.md
+            data/digests/*.csv
+          if-no-files-found: warn
+          retention-days: 30
