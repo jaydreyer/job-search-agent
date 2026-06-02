@@ -82,11 +82,24 @@ _MAX_POSTINGS = 60  # cap per call so a 700-job board doesn't blow the agent's c
 _MAX_DESC = 1200  # truncate descriptions; the agent scores on the summary
 
 
+# Populated as postings are handed to the agent: maps our stable id (and a
+# company+title key) to the FULL source URL. The orchestrator uses these to
+# repair the digest's URL column after the agent writes it — so the agent can
+# never corrupt a link (e.g. by stripping Adzuna's required query params).
+URL_BY_ID: dict[str, str] = {}
+URL_BY_KEY: dict[str, str] = {}
+
+
 def _compact(postings: list[JobPosting], limit: int = _MAX_POSTINGS) -> list[dict]:
     out = []
     for p in postings[:limit]:
+        pid = p.fingerprint
+        if p.url:
+            URL_BY_ID[pid] = p.url
+            URL_BY_KEY[feedback.key(p.company, p.title)] = p.url
         out.append(
             {
+                "id": pid,
                 "title": p.title,
                 "company": p.company,
                 "location": p.location,

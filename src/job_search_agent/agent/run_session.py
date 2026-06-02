@@ -13,8 +13,11 @@ from pathlib import Path
 
 import anthropic
 
+import csv
+
 from .. import feedback
 from ..config import ROOT, SearchConfig, Secrets
+from . import tools
 from .prompt import build_kickoff
 from .tools import handle_custom_tool
 
@@ -85,6 +88,31 @@ def _drain(client: anthropic.Anthropic, session_id: str, kickoff: str) -> None:
                 # keep iterating the SAME stream — no gap
 
 
+def _repair_urls(csv_path: Path) -> int:
+    """Rewrite the digest's url column from the host-side cache, so a link the
+    agent paraphrased/stripped is restored to the exact source URL. Matches by
+    our stable `id` first, then falls back to company+title."""
+    text = csv_path.read_text()
+    rows = list(csv.DictReader(text.splitlines()))
+    if not rows:
+        return 0
+    fixed = 0
+    for r in rows:
+        correct = tools.URL_BY_ID.get((r.get("id") or "").strip())
+        if not correct:
+            correct = tools.URL_BY_KEY.get(feedback.key(r.get("company", ""), r.get("title", "")))
+        if correct and correct != r.get("url"):
+            r["url"] = correct
+            fixed += 1
+    if fixed:
+        fieldnames = list(rows[0].keys())
+        with csv_path.open("w", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=fieldnames)
+            w.writeheader()
+            w.writerows(rows)
+    return fixed
+
+
 def _download_outputs(client: anthropic.Anthropic, session_id: str) -> list[Path]:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     stamp = date.today().isoformat()
@@ -122,6 +150,11 @@ def main() -> None:
         print("\n\nDigest saved:")
         for p in saved:
             print(f"  {p}")
+        for p in saved:
+            if p.suffix == ".csv":
+                n = _repair_urls(p)
+                if n:
+                    print(f"  repaired {n} URL(s) in {p.name}")
         from ..web.dashboard import build_dashboard
 
         dash = build_dashboard()

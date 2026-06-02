@@ -34,8 +34,10 @@ Write two files to `/mnt/session/outputs/`:
 1. `digest.md` — markdown, only postings at or above the run's min score, ranked high→low. \
 For each: `## <score> · [Title](url) — Company`, then a line with location/salary/source, \
 then a one-sentence verdict and short **Strengths**/**Gaps** lines.
-2. `digest.csv` — columns: score,title,company,location,salary,source,url,verdict (ALL \
-scored postings, not just the top ones).
+2. `digest.csv` — columns: id,score,title,company,location,salary,source,url,verdict (ALL \
+scored postings, not just the top ones). Copy each posting's `id` and `url` VERBATIM from \
+the tool results — do not edit, shorten, or strip anything from the url (its query \
+parameters are required to work).
 Finish with a one-paragraph summary of what you found.
 
 ## Candidate resume
