@@ -9,11 +9,15 @@ from ...models import JobPosting
 from .ashby import fetch_ashby
 from .greenhouse import fetch_greenhouse
 from .lever import fetch_lever
+from .workable import fetch_workable
+from .workday import fetch_workday
 
 _FETCHERS = {
     "greenhouse": fetch_greenhouse,
     "lever": fetch_lever,
     "ashby": fetch_ashby,
+    "workday": fetch_workday,
+    "workable": fetch_workable,
 }
 
 

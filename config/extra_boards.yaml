@@ -1,0 +1,21 @@
+# Hand-maintained boards on ATS systems the auto-validator can't discover
+# (Workday, Workable). These are MERGED with config/ats_boards.yaml at load time,
+# so `jobsearch-validate-boards` (which only manages the big-3) won't clobber them.
+#
+# Workday slug = "tenant/datacenter/site" — find it in the careers URL:
+#   https://{tenant}.{dc}.myworkdayjobs.com/{site}/...
+# Workable slug = the account name in apply.workable.com/{slug}.
+
+ats_boards:
+  - provider: workday
+    slug: automationanywhere/wd5/AutomationAnywhereJobs
+    label: Automation Anywhere (Aisera)
+  - provider: workday
+    slug: thoughtspot/wd5/careers
+    label: ThoughtSpot
+  - provider: workday
+    slug: datarobot/wd1/DataRobot_External_Careers
+    label: DataRobot
+  - provider: workable
+    slug: huggingface
+    label: Hugging Face

@@ -75,7 +75,7 @@ class SearchConfig(BaseModel):
             "customer engineer", "field engineer", "field cto", "ai engineer", "ml engineer",
             "machine learning engineer", "applied ai", "applied machine learning",
             "ai solutions", "genai", "ai product manager", "technical product manager",
-            "ai enablement", "developer enablement", "ai evangelist", "ai architect",
+            "ai enablement", "developer enablement", "evangelist", "ai architect",
         ]
     )
 
@@ -90,6 +90,12 @@ class SearchConfig(BaseModel):
             bdata = yaml.safe_load(boards_path.read_text()) or {}
             if bdata.get("ats_boards"):
                 data["ats_boards"] = bdata["ats_boards"]
+        # Hand-maintained boards the auto-validator can't discover (Workday/Workable).
+        extra_path = ROOT / "config" / "extra_boards.yaml"
+        if extra_path.exists():
+            edata = yaml.safe_load(extra_path.read_text()) or {}
+            data.setdefault("ats_boards", [])
+            data["ats_boards"] = list(data["ats_boards"]) + list(edata.get("ats_boards", []))
         return cls.model_validate(data)
 
 
