@@ -96,6 +96,15 @@ Everything saves to `data/feedback.json` (you own it). On the next run:
 > Open `index.html` directly and it's read-only (a banner reminds you). Run
 > `jobsearch-serve` for the clickable version. Same data either way.
 
+**Always-on:** the server runs as a `launchd` agent (starts at login, auto-restarts),
+so `localhost:8137` is always available — just bookmark it.
+
+```bash
+cp scripts/com.jaydreyer.jobsearch-server.plist ~/Library/LaunchAgents/
+launchctl load ~/Library/LaunchAgents/com.jaydreyer.jobsearch-server.plist   # start now + every login
+launchctl unload ~/Library/LaunchAgents/com.jaydreyer.jobsearch-server.plist # stop
+```
+
 You can also mark from the terminal: `uv run jobsearch-feedback applied "OpenAI" "Solutions Engineer, Pre-Sales"`.
 
 ## Daily schedule (already installed)

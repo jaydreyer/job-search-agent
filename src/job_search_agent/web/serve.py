@@ -9,6 +9,7 @@ so no CORS and nothing leaves your machine.
 
 from __future__ import annotations
 
+import os
 import threading
 import webbrowser
 
@@ -64,7 +65,10 @@ def set_preference(p: PreferenceIn) -> JSONResponse:
 def main() -> None:
     url = f"http://localhost:{PORT}"
     print(f"Dashboard: {url}  (Ctrl-C to stop)")
-    threading.Timer(0.8, lambda: webbrowser.open(url)).start()
+    # The always-on launchd agent sets JOBSEARCH_NO_OPEN so it doesn't pop a
+    # browser tab on every login/restart.
+    if not os.environ.get("JOBSEARCH_NO_OPEN"):
+        threading.Timer(0.8, lambda: webbrowser.open(url)).start()
     uvicorn.run(app, host="127.0.0.1", port=PORT, log_level="warning")
 
 

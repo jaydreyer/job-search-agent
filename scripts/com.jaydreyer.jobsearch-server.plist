@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Always-on dashboard server at http://localhost:8137 (separate from the daily
+  7:30 run). Starts at login and is kept alive if it crashes.
+
+  Install:
+    cp scripts/com.jaydreyer.jobsearch-server.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.jaydreyer.jobsearch-server.plist
+
+  Stop / remove:
+    launchctl unload ~/Library/LaunchAgents/com.jaydreyer.jobsearch-server.plist
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.jaydreyer.jobsearch-server</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/jaydreyer/job_search_agent/scripts/serve.sh</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
+
+    <key>StandardOutPath</key>
+    <string>/Users/jaydreyer/job_search_agent/data/digests/server.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/jaydreyer/job_search_agent/data/digests/server.err.log</string>
+</dict>
+</plist>
